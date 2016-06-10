@@ -1,0 +1,18 @@
+HDFS Command:
+##############################
+--Make new diretory in HDFS location:
+#hadoop fs -mkdir /user/cloudera/data
+--Checking disk usage by filtered data
+#du -h Downloads/Consumer_Complaints.csv
+--Put filtered data from local directory to HDFS directory:
+#hadoop fs -put Downloads/Consumer_Complaints.csv /user/cloudera/data/
+--Download processed data by Hive from HDFS directory to local directory:
+#hadoop fs -get /user/hive/warehouse/consumer_complain.db/consumer_data .
+--Checking of Processed Data:
+#cd comsumer_data
+#ls -ltr
+#view Consumer_data for Analysis by Tableau
+--Checking disk usage by processed data
+#du -h consumer_new_data
+
+ 

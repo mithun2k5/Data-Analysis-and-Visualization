@@ -1,0 +1,74 @@
+Hive Table Creation:
+#########################################
+--create database in Hive
+create database consumer_complain;
+use consumer_complain;
+
+create external table consumer_data(
+Date_Received string,
+Product string,
+Sub_product string,
+Issue string,
+Sub_issue string,
+Company string,
+State string,
+ZIP_code string,
+Tags string,
+Consumer_consent_provided string,
+Compliant_submitted_via string,
+Date_sent_to_company string,
+Company_response_to_consumer string,
+Timely_response string,
+Consumer_disputed string,
+Complaint_ID string)
+row format delimited fields terminated by ','
+stored as textfile
+location 'hdfs://quickstart.cloudera:8020/user/cloudera/Data';
+
+General Command:
+##########################################################
+select count(1) from consumer_data;
+
+select state,count(1) count_number from consumer_data 
+where date_received like ('%14') group by state order by 
+count_number desc;
+
+select company,count(1) count_number from consumer_data 
+where date_received like ('%14') group by company order by 
+count_number desc;
+
+select substr(date_received,4) month_date,state,company,
+count(state) state_count,count(company) company_count from 
+consumer_data where date_received like('%14') group by state,
+company,substr(date_received,4) order by state_count,company_count,
+month_date;
+
+select substr(date_received,4) month_date,
+count(state) state_count,count(company) company_count from 
+consumer_data where date_received like ('%14') group by 
+substr(date_received,4) order by month_date desc;
+
+Command for Checking:
+#############################################################
+select substr(date_received,4) month_date,count(state) complain_count from
+consumer_data where date_received like ('%14') group by
+substr(date_received,4) order by month_date desc;
+
+select substr (date_received,4) month_date,state,count(1) count_number from
+consumer_data where date_received like ('%14') group by
+state,substr(date_received,4) order by state,month_date desc;
+
+select substr(date_received,4) month_date,company,count(1) count_number from
+consumer_data where date_received like ('%14') group by
+substr(date_received,4),company order by company,month_date desc;
+
+Final Command:
+##################################################################
+create table consumer_new_data
+row format delimited fields terminated by '|'
+as
+select substr(date_received,4) month_date,count(state)
+complain_count,state,count(1) state_count,company,count(1) company_count from
+consumer_data
+where date_received like ('%14') group by
+substr(date_received,4),state,company order by month_date desc;
